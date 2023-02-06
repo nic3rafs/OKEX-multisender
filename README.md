@@ -8,15 +8,16 @@ OKEX Multisend is a Node.js script that allows you to withdraw a random amount o
 
 ## Set Up
 1. Clone the repository or download the script to your local machine
-2. Run `npm install` in the project folder to install the required dependencies
-3. Create a `.env` file and add your API credentials as environment variables:
+2. Go to script folder in terminal `cd path/to/folder`
+3. Run `npm install` in the project folder to install the required dependencies
+4. Create a `.env` file and add your API credentials as environment variables:
     ```
     OKEX_ACCESS_KEY=your_access_key
     OKEX_SECRET_KEY=your_secret_key
     OKEX_ACCESS_PASSPHRASE=your_access_passphrase
     ```
-4. Create an `addresses.txt` file in the project folder and add the addresses you want to send the coins to, one per line
-5. Start the script with `npm start`
+5. Create an `addresses.txt` file in the project folder and add the addresses you want to send the coins to, one per line
+6. Start the script with `npm start`
 
 ## Running the Script
 When you start the script, you will be prompted to answer a series of questions:
