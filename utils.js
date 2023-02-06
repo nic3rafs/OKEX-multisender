@@ -3,13 +3,13 @@ export const questions = [
   {
     type: "text",
     name: "coinAndChain",
-    message: "What coin do you want to send, and what chain. E.g: BNB, BSC",
+    message: "What coin do you want to send, and what chain. E.g: BNB-BSC",
     separator: ",",
     validate: (coinAndChain) =>
-      coinAndChain.split(",").length === 2
+      coinAndChain.split("-").length === 2
         ? true
-        : "Coin and chain must be separated with ',', for example: ETH, ETH",
-    format: (value) => value.split(","),
+        : "Coin and chain must be separated with '-', for example: ETH-ETH",
+    format: (value) => value.split("-"),
   },
   {
     type: "text",
