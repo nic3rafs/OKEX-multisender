@@ -20,7 +20,7 @@ OKEX Multisend is a Node.js script that allows you to withdraw a random amount o
 
 ## Running the Script
 When you start the script, you will be prompted to answer a series of questions:
-1. The name and chain of the coin you want to send (e.g. "**BNB, BSC**", "**ETH, ETH**", "**USDT, ETH**", etc.)
+1. The name and chain of the coin you want to send (e.g. "**BNB-BSC**", "**ETH-ETH**", "**USDT-ETH**", etc.)
 2. The minimum and maximum amount you want to send (e.g. "**0.1-0.1**" for specified amount, "**0.01-0.05**" for random amount)
 3. The network fee (e.g. "0.002", check withdraw fee on OKEX)
     ![Screehshot](https://i.postimg.cc/tCs0KDJ2/Screenshot-2023-02-06-at-17-33-34.png)
