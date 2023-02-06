@@ -24,6 +24,7 @@ When you start the script, you will be prompted to answer a series of questions:
 2. The minimum and maximum amount you want to send (e.g. "**0.1-0.1**" for specified amount, "**0.01-0.05**" for random amount)
 3. The network fee (e.g. "0.002", check withdraw fee on OKEX)
     <img src='https://i.postimg.cc/tCs0KDJ2/Screenshot-2023-02-06-at-17-33-34.png' alt='Screenshot' width=50% height=50%/>
+    
 4. The minimum and maximum time to wait between withdrawals in millisends (e.g  "**5000-5000**" for speciefied time, "**1000-3000**" for random time)
 
 
