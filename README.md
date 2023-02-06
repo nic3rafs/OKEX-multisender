@@ -2,8 +2,7 @@
 OKEX Multisend is a Node.js script that allows you to withdraw a random amount of a certain cryptocurrency to multiple addresses.
 
 ### Requirements
-- Node.js
-- npm
+- Node.js and npm ([link](https://nodejs.org/en/download/))
 - An OKEX account with API credentials
 - Addresses to send the coins to (saved in a addresses.txt file)
 
