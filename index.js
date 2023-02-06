@@ -1,76 +1,97 @@
+import prompts from "prompts";
 import ccxt from "ccxt";
 import * as dotenv from "dotenv";
-import fs from "fs";
+import prettyjson from "prettyjson";
+import chalk from "chalk";
 dotenv.config();
-
-//CONFIG
-const coin = "ETH"; // ETH for ETH
-const network = "ETH"; // ETH for ETH, BSC for BinanceSmartChain
-const networkFee = 0.00096;
-
-const minTimeSleep = 10000; // time in milliseconds
-const maxTimeSleep = 15000;
-
-const minAmount = 0.01;
-const maxAmount = 0.02;
-const digitsAfterPeriod = 4; // How much digits to have after period in send amount
-//================================================================
+import {
+  questions,
+  readFileAsArray,
+  sleep,
+  randomAmount,
+  randomSleep,
+  convertMsToTime,
+} from "./utils.js";
 
 const ccxtConfig = {
   enableRateLimit: true,
-  apiKey: process.env.OK_ACCESS_KEY,
+  apiKey: process.env.OKEX_ACCESS_KEY,
   secret: process.env.OKEX_SECRET_KEY,
-  password: process.env.OK_ACCESS_PASSPHRASE,
+  password: process.env.OKEX_ACCESS_PASSPHRASE,
 };
 
-const readFileAsArray = async (fileName) => {
-  try {
-    const fileContent = await fs.promises.readFile(fileName, "utf-8");
-    console.log(`File ${fileName} is read successfully.\n`);
-    return fileContent.split("\n");
-  } catch (error) {
-    console.error(`Error reading file ${fileName}: ${error}`);
-    return null;
-  }
+export const log = (msg) => {
+  console.log(`[ ${chalk.green(convertMsToTime(Date.now()))} ] - ${msg}`);
 };
-async function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-function randomAmount(min, max) {
-  return (Math.random() * (max - min) + min).toFixed(digitsAfterPeriod);
-}
-function randomSleep(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 
-const main = async () => {
+const multisend = async (multisendConfig) => {
   const okex = new ccxt.okex(ccxtConfig);
 
   try {
     const addresses = await readFileAsArray("addresses.txt");
     for (const address of addresses) {
-      const amount = randomAmount(minAmount, maxAmount);
+      const amount = randomAmount(
+        multisendConfig.minAmount,
+        multisendConfig.maxAmount,
+        multisendConfig.digitsAfterPeriod
+      );
       try {
-        const withdrawResponse = await okex.withdraw(coin, amount, address, {
-          fee: networkFee,
-          network: network,
-          password: ccxtConfig.password,
-        });
+        const withdrawResponse = await okex.withdraw(
+          multisendConfig.coin,
+          amount,
+          address,
+          {
+            fee: multisendConfig.networkFee,
+            network: multisendConfig.network,
+            password: ccxtConfig.password,
+          }
+        );
 
         if (withdrawResponse.info.wdId) {
-          console.log(`Succesfull withdraw ${amount}${coin} for (${address})`);
+          log(
+            `Succesfull withdraw ${amount} ${multisendConfig.coin} for (${address})`
+          );
         }
       } catch (error) {
         console.log(`[Error] with (${address}) - ${error}`);
       }
-      const sleepTime = randomSleep(minTimeSleep, maxTimeSleep);
-      console.log(`Sleeping for ${sleepTime} ms `);
+      const sleepTime = randomSleep(
+        multisendConfig.minTimeSleep,
+        multisendConfig.maxTimeSleep
+      );
+      log(`Sleeping for ${sleepTime} ms `);
       await sleep(sleepTime);
     }
   } catch (error) {
     console.log(error);
+  }
+};
+
+const main = async () => {
+  const questionsAnswers = await prompts(questions);
+  const multisendConfig = {
+    coin: questionsAnswers.coinAndChain[0].trim().toUpperCase(),
+    chain: questionsAnswers.coinAndChain[1].trim().toUpperCase(),
+    minAmount: +questionsAnswers.amount[0].trim(),
+    maxAmount: +questionsAnswers.amount[1].trim(),
+    networkFee: +questionsAnswers.networkFee,
+    minTimeSleep: +questionsAnswers.timeToSleep[0].trim(),
+    maxTimeSleep: +questionsAnswers.timeToSleep[1].trim(),
+    digitsAfterPeriod: 4,
+  };
+  console.log('\n' + prettyjson.render(multisendConfig) + '\n');
+  const confirm = await prompts({
+    type: "confirm",
+    name: "value",
+    message: "Do you want to continue?",
+    initial: false,
+  });
+
+  if (confirm.value) {
+    console.log("\nStarting...");
+    multisend(multisendConfig);
+  } else {
+    process.exit(0);
   }
 };
 main();
