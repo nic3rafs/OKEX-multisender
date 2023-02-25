@@ -29,6 +29,7 @@ const multisend = async (multisendConfig) => {
 
   try {
     const addresses = await readFileAsArray("addresses.txt");
+    console.log(addresses);
     for (const address of addresses) {
       const amount = randomAmount(
         multisendConfig.minAmount,
@@ -63,7 +64,7 @@ const multisend = async (multisendConfig) => {
       await sleep(sleepTime);
     }
   } catch (error) {
-    console.log(error);
+    console.log(`[Error] with (${address}) - ${error}`);
   }
 };
 
