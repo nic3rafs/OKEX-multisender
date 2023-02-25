@@ -29,8 +29,8 @@ const multisend = async (multisendConfig) => {
 
   try {
     const addresses = await readFileAsArray("addresses.txt");
-    console.log(addresses);
-    for (const address of addresses) {
+    for (let address of addresses) {
+      address = address.replace(/(\r\n|\n|\r)/gm, "");
       const amount = randomAmount(
         multisendConfig.minAmount,
         multisendConfig.maxAmount,
