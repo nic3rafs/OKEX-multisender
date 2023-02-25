@@ -26,11 +26,12 @@ export const log = (msg) => {
 
 const multisend = async (multisendConfig) => {
   const okex = new ccxt.okex(ccxtConfig);
-
   try {
     const addresses = await readFileAsArray("addresses.txt");
     for (let address of addresses) {
+
       address = address.replace(/(\r\n|\n|\r)/gm, "");
+      console.log(address);
       const amount = randomAmount(
         multisendConfig.minAmount,
         multisendConfig.maxAmount,
