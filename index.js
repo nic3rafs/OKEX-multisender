@@ -29,9 +29,7 @@ const multisend = async (multisendConfig) => {
   try {
     const addresses = await readFileAsArray("addresses.txt");
     for (let address of addresses) {
-
-      address = address.replace(/(\r\n|\n|\r)/gm, "");
-      console.log(address);
+      address = address.replace(/(\r\n|\n|\r)/gm, "");s
       const amount = randomAmount(
         multisendConfig.minAmount,
         multisendConfig.maxAmount,
@@ -81,7 +79,7 @@ const main = async () => {
     maxTimeSleep: +questionsAnswers.timeToSleep[1].trim(),
     digitsAfterPeriod: 4,
   };
-  console.log('\n' + prettyjson.render(multisendConfig) + '\n');
+  console.log("\n" + prettyjson.render(multisendConfig) + "\n");
   const confirm = await prompts({
     type: "confirm",
     name: "value",
