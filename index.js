@@ -39,11 +39,11 @@ const multisend = async (multisendConfig) => {
 
         if (withdrawResponse.code === "0") {
           log(
-            `Successful withdraw ${amount} ${multisendConfig.coin} for (${cleanedAddress})`
+            `Succesfull withdraw ${amount} ${multisendConfig.coin} for (${cleanedAddress})`
           );
         }
       } catch (error) {
-        console.log(`[Error] with (${cleanedAddress}) - ${error}`);
+        console.log(`[Error] with (${address}) - ${error}`);
       }
       const sleepTime = randomSleep(
         multisendConfig.minTimeSleep,
@@ -53,7 +53,7 @@ const multisend = async (multisendConfig) => {
       await sleep(sleepTime);
     }
   } catch (error) {
-    console.log(`[Error] with (${address}) - ${error}`);
+    console.log(`[Error] - ${error}`);
   }
 };
 
