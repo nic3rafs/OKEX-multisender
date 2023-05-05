@@ -43,7 +43,7 @@ const getAccountBalance = async () => {
   }
 };
 
-const getSingleCurrencie = async (currency) => {
+const getSingleCurrency = async (currency) => {
   const method = "GET";
   const requestPath = `/api/v5/asset/currencies?ccy=${currency}`;
   const headers = getRequestHeaders(method, requestPath);
@@ -52,22 +52,11 @@ const getSingleCurrencie = async (currency) => {
     const response = await axios.get("https://www.okex.com" + requestPath, {
       headers,
     });
-    // console.log(response.data);
     return response.data;
   } catch (error) {
     return console.error("Error:", error.response.data);
   }
 };
-
-// const currency = await getSingleCurrencie("ETH");
-// if (currency.code === "0") {
-//   for (let item of currency.data) {
-//     if (item.chain === "ETH-Arbitrum one") {
-//       console.log(item);
-//     }
-//   }
-// }
-// getAccountBalance()
 
 async function withdraw(
   ccy,
@@ -110,4 +99,4 @@ async function withdraw(
   }
 }
 
-export { withdraw, getAccountBalance, getSingleCurrencie };
+export { withdraw, getAccountBalance, getSingleCurrency };

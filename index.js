@@ -13,15 +13,15 @@ import {
 } from "./utils.js";
 import { withdraw } from "./okexApi.js";
 
-export const log = (msg) => {
+const log = (msg) => {
   console.log(`[ ${chalk.green(convertMsToTime(Date.now()))} ] - ${msg}`);
 };
 
 const multisend = async (multisendConfig) => {
   try {
     const addresses = await readFileAsArray("addresses.txt");
-    for (let address of addresses) {
-      address = address.replace(/(\r\n|\n|\r)/gm, "");
+    for (const address of addresses) {
+      const cleanedAddress = address.replace(/(\r\n|\n|\r)/gm, "");
       const amount = randomAmount(
         multisendConfig.minAmount,
         multisendConfig.maxAmount,
@@ -32,18 +32,18 @@ const multisend = async (multisendConfig) => {
           multisendConfig.coin,
           parseFloat(amount),
           "4",
-          address,
+          cleanedAddress,
           multisendConfig.networkFee,
           `${multisendConfig.coin}-${multisendConfig.chain}`
         );
 
         if (withdrawResponse.code === "0") {
           log(
-            `Succesfull withdraw ${amount} ${multisendConfig.coin} for (${address})`
+            `Successful withdraw ${amount} ${multisendConfig.coin} for (${cleanedAddress})`
           );
         }
       } catch (error) {
-        console.log(`[Error] with (${address}) - ${error}`);
+        console.log(`[Error] with (${cleanedAddress}) - ${error}`);
       }
       const sleepTime = randomSleep(
         multisendConfig.minTimeSleep,
@@ -62,11 +62,11 @@ const main = async () => {
   const multisendConfig = {
     coin: questionsAnswers.coinAndChain[0].trim().toUpperCase(),
     chain: questionsAnswers.coinAndChain[1].trim(),
-    minAmount: +questionsAnswers.amount[0].trim(),
-    maxAmount: +questionsAnswers.amount[1].trim(),
-    networkFee: +questionsAnswers.networkFee,
-    minTimeSleep: +questionsAnswers.timeToSleep[0].trim(),
-    maxTimeSleep: +questionsAnswers.timeToSleep[1].trim(),
+    minAmount: parseFloat(questionsAnswers.amount[0].trim()),
+    maxAmount: parseFloat(questionsAnswers.amount[1].trim()),
+    networkFee: parseFloat(questionsAnswers.networkFee),
+    minTimeSleep: parseFloat(questionsAnswers.timeToSleep[0].trim()),
+    maxTimeSleep: parseFloat(questionsAnswers.timeToSleep[1].trim()),
     digitsAfterPeriod: 4,
   };
   console.log("\n" + prettyjson.render(multisendConfig) + "\n");
