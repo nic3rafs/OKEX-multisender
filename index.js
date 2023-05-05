@@ -43,7 +43,7 @@ const multisend = async (multisendConfig) => {
           );
         }
       } catch (error) {
-        console.log(`[Error] with (${address}) - ${error}`);
+        console.log(`[Error] with (${cleanedAddress}) - ${error}`);
       }
       const sleepTime = randomSleep(
         multisendConfig.minTimeSleep,
