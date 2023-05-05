@@ -5,15 +5,15 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ccxt": "^2.6.36",
+    "axios": "^1.4.0",
     "chalk": "^5.2.0",
+    "crypto-js": "^4.1.1",
     "dotenv": "^16.0.3",
     "prettyjson": "^1.2.5",
     "prompts": "^2.4.2"

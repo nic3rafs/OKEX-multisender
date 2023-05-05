@@ -1,8 +1,7 @@
 import prompts from "prompts";
-import ccxt from "ccxt";
-import * as dotenv from "dotenv";
 import prettyjson from "prettyjson";
 import chalk from "chalk";
+import * as dotenv from "dotenv";
 dotenv.config();
 import {
   questions,
@@ -12,42 +11,33 @@ import {
   randomSleep,
   convertMsToTime,
 } from "./utils.js";
-
-const ccxtConfig = {
-  enableRateLimit: true,
-  apiKey: process.env.OKEX_ACCESS_KEY,
-  secret: process.env.OKEX_SECRET_KEY,
-  password: process.env.OKEX_ACCESS_PASSPHRASE,
-};
+import { withdraw } from "./okexApi.js";
 
 export const log = (msg) => {
   console.log(`[ ${chalk.green(convertMsToTime(Date.now()))} ] - ${msg}`);
 };
 
 const multisend = async (multisendConfig) => {
-  const okex = new ccxt.okex(ccxtConfig);
   try {
     const addresses = await readFileAsArray("addresses.txt");
     for (let address of addresses) {
-      address = address.replace(/(\r\n|\n|\r)/gm, "");s
+      address = address.replace(/(\r\n|\n|\r)/gm, "");
       const amount = randomAmount(
         multisendConfig.minAmount,
         multisendConfig.maxAmount,
         multisendConfig.digitsAfterPeriod
       );
       try {
-        const withdrawResponse = await okex.withdraw(
+        const withdrawResponse = await withdraw(
           multisendConfig.coin,
-          amount,
+          parseFloat(amount),
+          "4",
           address,
-          {
-            fee: multisendConfig.networkFee,
-            network: multisendConfig.network,
-            password: ccxtConfig.password,
-          }
+          multisendConfig.networkFee,
+          `${multisendConfig.coin}-${multisendConfig.chain}`
         );
 
-        if (withdrawResponse.info.wdId) {
+        if (withdrawResponse.code === "0") {
           log(
             `Succesfull withdraw ${amount} ${multisendConfig.coin} for (${address})`
           );
@@ -71,7 +61,7 @@ const main = async () => {
   const questionsAnswers = await prompts(questions);
   const multisendConfig = {
     coin: questionsAnswers.coinAndChain[0].trim().toUpperCase(),
-    chain: questionsAnswers.coinAndChain[1].trim().toUpperCase(),
+    chain: questionsAnswers.coinAndChain[1].trim(),
     minAmount: +questionsAnswers.amount[0].trim(),
     maxAmount: +questionsAnswers.amount[1].trim(),
     networkFee: +questionsAnswers.networkFee,
