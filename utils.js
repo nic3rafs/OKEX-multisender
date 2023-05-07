@@ -1,4 +1,5 @@
 import fs from "fs";
+
 export const questions = [
   {
     type: "text",
@@ -14,7 +15,7 @@ export const questions = [
   {
     type: "text",
     name: "amount",
-    message: "What the min and max amount to send?",
+    message: "What is the minimum and maximum amount to send?",
     validate: (amount) =>
       amount.split("-").length === 2
         ? true
@@ -24,12 +25,12 @@ export const questions = [
   {
     type: "text",
     name: "networkFee",
-    message: "What network fee is now on OKEX for your withdrawing your coin?",
+    message: "What is the current network fee on OKEX for withdrawing your coin?",
   },
   {
     type: "text",
     name: "timeToSleep",
-    message: "What the min and max time to sleep",
+    message: "What is the minimum and maximum time to sleep?",
     separator: "-",
     validate: (timeToSleep) =>
       timeToSleep.split("-").length === 2
@@ -53,18 +54,21 @@ export const readFileAsArray = async (fileName) => {
 export const sleep = async (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
+
 export const randomAmount = (min, max, digitsAfterPeriod) => {
   return (Math.random() * (max - min) + min).toFixed(digitsAfterPeriod);
 };
+
 export const randomSleep = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-function padTo2Digits(num) {
+export const padTo2Digits = (num) => {
   return num.toString().padStart(2, "0");
-}
+};
+
 export const convertMsToTime = (milliseconds) => {
   let seconds = Math.floor(milliseconds / 1000);
   let minutes = Math.floor(seconds / 60);
@@ -76,6 +80,7 @@ export const convertMsToTime = (milliseconds) => {
     seconds
   )}`;
 };
+
 export const log = (msg) => {
   console.log(`[ ${chalk.greenBright(convertMsToTime(Date.now()))} ] - ${msg}`);
 };
