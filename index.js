@@ -2,7 +2,6 @@ import prompts from "prompts";
 import prettyjson from "prettyjson";
 import chalk from "chalk";
 import * as dotenv from "dotenv";
-dotenv.config();
 import {
   questions,
   readFileAsArray,
@@ -12,6 +11,8 @@ import {
   convertMsToTime,
 } from "./utils.js";
 import { withdraw } from "./okexApi.js";
+
+dotenv.config();
 
 const log = (msg) => {
   console.log(`[ ${chalk.green(convertMsToTime(Date.now()))} ] - ${msg}`);
@@ -39,7 +40,7 @@ const multisend = async (multisendConfig) => {
 
         if (withdrawResponse.code === "0") {
           log(
-            `Succesfull withdraw ${amount} ${multisendConfig.coin} for (${cleanedAddress})`
+            `Successful withdraw ${amount} ${multisendConfig.coin} for (${cleanedAddress})`
           );
         }
       } catch (error) {
@@ -84,4 +85,5 @@ const main = async () => {
     process.exit(0);
   }
 };
+
 main();
