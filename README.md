@@ -27,7 +27,7 @@ When you start the script, you will be prompted to answer a series of questions:
 
 
 Once you have answered all the questions, the script will display a configuration summary and ask for confirmation. If you confirm, the script will start sending the coins. The progress will be logged to the console, including the time, the address, and the amount sent.
-([screenshot]("public/screenshot.png))
+![](./public/Screenshot.png)
 
 ### Note
 Please make sure to understand the risks involved with sending cryptocurrency. Use this script at your own risk.
