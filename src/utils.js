@@ -22,11 +22,11 @@ export const questions = [
         : "Amount must two numbers separated with '-', for example: 0.1-0.2",
     format: (value) => value.split("-"),
   },
-  {
-    type: "text",
-    name: "networkFee",
-    message: "What is the current network fee on OKEX for withdrawing your coin?",
-  },
+  // {
+  //   type: "text",
+  //   name: "networkFee",
+  //   message: "What is the current network fee on OKEX for withdrawing your coin?",
+  // },
   {
     type: "text",
     name: "timeToSleep",

@@ -94,9 +94,40 @@ async function withdraw(
     if (response.data.code === "0") {
       return response.data;
     }
+    throw new Error(`API error: ${response.data.msg}`);
   } catch (error) {
-    return console.error("Error:", error.response.data);
+    console.error("Error during withdrawal:", error);
+    throw error;
   }
 }
 
-export { withdraw, getAccountBalance, getSingleCurrency };
+async function getWithdrawalFee(ccy, chain) {
+  const method = "GET";
+  const requestPath = `/api/v5/asset/currencies?ccy=${ccy}`;
+  const headers = getRequestHeaders(method, requestPath);
+
+  try {
+    const response = await axios.get("https://www.okex.com" + requestPath, {
+      headers,
+    });
+    const data = response.data.data;
+    // Find the matching currency and chain
+    const matchingCurrency = data.find(
+      (currency) => currency.ccy === ccy && currency.chain === chain
+    );
+    if (!matchingCurrency) {
+      throw new Error(
+        `No matching currency and chain found for ${ccy} and ${chain}`
+      );
+    }
+    // console.log("matchingCurrency: ", matchingCurrency);
+    return parseFloat(matchingCurrency.minFee); // Or maxFee, depending on your need
+  } catch (error) {
+    console.error("Error:", error.response?.data);
+    throw new Error(
+      error.response?.data || "An error occurred while fetching withdrawal fees"
+    );
+  }
+}
+
+export { withdraw, getAccountBalance, getSingleCurrency, getWithdrawalFee };

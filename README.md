@@ -17,18 +17,17 @@ OKEX Multisend is a Node.js script that allows you to withdraw a random amount o
     OKEX_ACCESS_PASSPHRASE=your_access_passphrase
     ```
 5. Create an `addresses.txt` file in the project folder and add the addresses you want to send the coins to, one per line
-6. Start the script with `npm start`
+6. Start the script with `npm start` (You can also run with `npm run start:config` to run with premade configuration in **multisendConfig.json**)
 
 ## Running the Script
 When you start the script, you will be prompted to answer a series of questions:
-1. The name and chain of the coin you want to send (e.g. "**BNB-BSC**", "**ETH-ETH**", "**ETH-Arbitrum one**", "**USDT-ETH**", etc.)
+1. The name and chain of the coin you want to send (e.g. "**BNB-BSC**", "**ETH-ETH20**", "**ETH-Arbitrum one**", "**USDT-ETH**", etc. You can see them on OKEX)
 2. The minimum and maximum amount you want to send (e.g. "**0.1-0.1**" for specified amount, "**0.01-0.05**" for random amount)
-3. The network fee (e.g. "**0.002**", check withdraw fee on OKEX) <img src='https://i.postimg.cc/tCs0KDJ2/Screenshot-2023-02-06-at-17-33-34.png' alt='Screenshot' width=50% height=50%/>
-4. The minimum and maximum time to wait between withdrawals in millisends (e.g  "**5000-5000**" for speciefied time, "**1000-3000**" for random time)
+3. The minimum and maximum time to wait between withdrawals in millisends (e.g  "**5000-5000**" for speciefied time, "**1000-3000**" for random time)
 
 
 Once you have answered all the questions, the script will display a configuration summary and ask for confirmation. If you confirm, the script will start sending the coins. The progress will be logged to the console, including the time, the address, and the amount sent.
-![Screehshot](https://snipboard.io/eHrFL6.jpg)
+([screenshot]("./public/screenshot.png))
 
 ### Note
 Please make sure to understand the risks involved with sending cryptocurrency. Use this script at your own risk.

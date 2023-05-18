@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import prompts from "prompts";
 import prettyjson from "prettyjson";
 import chalk from "chalk";
@@ -9,8 +11,8 @@ import {
   randomAmount,
   randomSleep,
   convertMsToTime,
-} from "./utils.js";
-import { withdraw } from "./okexApi.js";
+} from "./src/utils.js";
+import { withdraw, getWithdrawalFee } from "./src/okexApi.js";
 
 dotenv.config();
 
@@ -20,13 +22,17 @@ const log = (msg) => {
 
 const multisend = async (multisendConfig) => {
   try {
+    const fee = await getWithdrawalFee(
+      multisendConfig.coin,
+      `${multisendConfig.coin}-${multisendConfig.chain}`
+    );
     const addresses = await readFileAsArray("addresses.txt");
     for (const address of addresses) {
       const cleanedAddress = address.replace(/(\r\n|\n|\r)/gm, "");
       const amount = randomAmount(
         multisendConfig.minAmount,
         multisendConfig.maxAmount,
-        multisendConfig.digitsAfterPeriod
+        6
       );
       try {
         const withdrawResponse = await withdraw(
@@ -34,7 +40,7 @@ const multisend = async (multisendConfig) => {
           parseFloat(amount),
           "4",
           cleanedAddress,
-          multisendConfig.networkFee,
+          fee,
           `${multisendConfig.coin}-${multisendConfig.chain}`
         );
 
@@ -44,7 +50,7 @@ const multisend = async (multisendConfig) => {
           );
         }
       } catch (error) {
-        console.log(`[Error] with (${cleanedAddress}) - ${error}`);
+        console.log(`[Error] with (${cleanedAddress}) - ${error.message}`);
       }
       const sleepTime = randomSleep(
         multisendConfig.minTimeSleep,
@@ -54,22 +60,29 @@ const multisend = async (multisendConfig) => {
       await sleep(sleepTime);
     }
   } catch (error) {
-    console.log(`[Error] - ${error}`);
+    console.log(`[Error] - ${error.message}`);
   }
 };
 
 const main = async () => {
-  const questionsAnswers = await prompts(questions);
-  const multisendConfig = {
-    coin: questionsAnswers.coinAndChain[0].trim().toUpperCase(),
-    chain: questionsAnswers.coinAndChain[1].trim(),
-    minAmount: parseFloat(questionsAnswers.amount[0].trim()),
-    maxAmount: parseFloat(questionsAnswers.amount[1].trim()),
-    networkFee: parseFloat(questionsAnswers.networkFee),
-    minTimeSleep: parseFloat(questionsAnswers.timeToSleep[0].trim()),
-    maxTimeSleep: parseFloat(questionsAnswers.timeToSleep[1].trim()),
-    digitsAfterPeriod: 4,
-  };
+  let multisendConfig;
+  if (process.argv[2] === "-c") {
+    // Load configuration from file when -c flag is provided
+    const configJson = fs.readFileSync("multisendConfig.json");
+    multisendConfig = JSON.parse(configJson);
+  } else {
+    const questionsAnswers = await prompts(questions);
+    multisendConfig = {
+      coin: questionsAnswers.coinAndChain[0].trim().toUpperCase(),
+      chain: questionsAnswers.coinAndChain[1].trim(),
+      minAmount: parseFloat(questionsAnswers.amount[0].trim()),
+      maxAmount: parseFloat(questionsAnswers.amount[1].trim()),
+      // networkFee: parseFloat(questionsAnswers.networkFee),
+      minTimeSleep: parseFloat(questionsAnswers.timeToSleep[0].trim()),
+      maxTimeSleep: parseFloat(questionsAnswers.timeToSleep[1].trim()),
+    };
+  }
+
   console.log("\n" + prettyjson.render(multisendConfig) + "\n");
   const confirm = await prompts({
     type: "confirm",

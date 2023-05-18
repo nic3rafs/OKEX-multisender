@@ -1,0 +1,8 @@
+{
+  "coin": "ETH",
+  "chain": "Arbitrum one",
+  "minAmount": 0.001,
+  "maxAmount": 0.001,
+  "minTimeSleep": 1000,
+  "maxTimeSleep": 2000
+}
